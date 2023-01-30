@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+header {
+  background-color: #666;
+  padding: 1px;
+  text-align: center;
+  font-size: 20px;
+  color: white;
+}
+
+.contenedor {
+  margin-top: 20px;
+  height: 600px;
+}
+
+.columna {
+  float: left;
+  width: 50%;
+  height: 500px;
+}
+
+.comentario {
+  margin-top: 20px;
+  margin-left: 20px;
+  margin-right: 20px;
+  border-radius: 25px;
+  padding: 20px;
+  /*height: 200px;*/
+  box-shadow: 5px 10px 8px 10px #888888;
+}
+
+.filtro {
+  margin-top: 20px;
+  margin-bottom: 10px;
+  width: 200px;
+  font-size: 18px;
+}
+
+footer {
+  background-color: #666;
+  padding: 10px;
+  text-align: left;
+  color: white;
+}
+
+</style>
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/modules/export-data.js"></script>
+<script src="https://code.highcharts.com/modules/accessibility.js"></script>
+<script>
+//-------------------- Datos para las gráficas --------------------
+const datosGraf1 = {
+  "Total": {
+    2009: [3276,3722,4801,3810,3648,3363,3208,2416,823,3176,1270,1789],
+    2010: [3053,3474,4289,3524,3797,3910,3438,1929,3004,2317,2383,1850],
+    2011: [3749,4156,4945,4629,4994,5688,5117,5612,6271,6156,6181,5112],
+    2012: [5952,6216,7362,6651,6999,7443]
+  },
+  "Hombres": {
+    2009: [1716,1950,2515,1996,1911,1762,1681,1266,431,1664,665,937],
+    2010: [1589,1808,2232,1834,1976,2035,1789,1004,1563,1206,1240,963],
+    2011: [1815,2012,2394,2241,2418,2754,2477,2717,3036,2980,2992,2475],
+    2012: [3090,3227,3822,3453,3633,3864]
+  },
+  "Mujeres": {
+    2009: [1560,1772,2286,1814,1737,1601,1527,1150,392,1512,605,852],
+    2010: [1464,1666,2057,1690,1821,1875,1649,925,1441,1111,1143,887],
+    2011: [1934,2144,2551,2388,2576,2934,2640,2895,3235,3176,3189,2637],
+    2012: [2862,2989,3540,3198,3366,3579]
+  }
+}
+const datosGraf2 = {
+  'Total': [35302,36968,62610,40623],
+  'Hombres': [18494,19239,30311,21089],
+  'Mujeres': [16808,17729,32299,19534]
+}
+</script>
+<script>
+//-------------------- Actualizar gráficas --------------------
+function actualizar() {
+  var sexo = document.getElementById("filtroSexo").value;
+  console.log(sexo);
+  chart1.setTitle(null, {text: sexo});
+  chart2.setTitle(null, {text: sexo});
+  chart1.series[0].setData(datosGraf1[sexo][2009]);
+  chart1.series[1].setData(datosGraf1[sexo][2010]);
+  chart1.series[2].setData(datosGraf1[sexo][2011]);
+  chart1.series[3].setData(datosGraf1[sexo][2012]);
+  chart2.series[0].setData(datosGraf2[sexo]);
+  chart2.series[0].setName(sexo);
+}
+</script>
+</head>
+<body>
+
+<header>
+  <h2>Trabajo: Rediseño. Emigración.</h2>
+</header>
+
+<div>
+  <label for="filtroSexo">Seleccionar el sexo a visualizar: </label>
+  <select class="filtro" name="sexoSel" id="filtroSexo" onchange="actualizar()">
+    <option value="Total">Total</option>
+    <option value="Hombres">Hombres</option>
+    <option value="Mujeres">Mujeres</option>
+  </select>
+</div>
+
+<hr>
+
+<div class="contenedor">
+  <div class="columna">
+    <div id="Graf1"></div>
+    <div class="comentario">Se puede observar que en los dos primeros años (2009 y 2010) la cantidad de migrantes se comportó de forma muy similar a lo largo de los meses. Sin embargo, para el año 2011 se presentó un incremento en el nivel de migrantes, pues la tendencia se despegó a partir de abril, manteniendo la tendencia creciente hasta junio de 2012.</div>
+  </div>
+  <div class="columna">
+    <div id="Graf2"></div>
+    <div class="comentario">Al repesentar los datos acumulados por año, se puede observar muy claramente el incremento que existió en 2011 respecto al año previo (de casi 70%). Además, es notorio que pese a que sólo se cuenta con el primer semestre de 2012, éste ya superó lo reportado en 2009 y 2010; y ya alcanza dos terceras partes de 2011. De mantenerse esta tendencia, en 2012 se podrían superar los 90 mil migrantes.</div>
+  </div>
+</div>
+
+<footer>
+  <p><b>Fuente de datos:</b> http://yusef.es/ejemplosunir/emigracionCSV.csv</p>
+</footer>
+
+<script>
+//-------------------- Crear gráficas --------------------
+var chart1 = Highcharts.chart('Graf1', {
+    title: {
+        text: 'Evolución de migrantes españoles por mes'
+    },
+
+    subtitle: {
+        text: 'Total'
+    },
+
+    yAxis: {
+        title: {
+            text: 'Emigrantes'
+        }
+    },
+
+    xAxis: {
+        categories: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+        title: {
+            text: "Mes"
+        }
+    },
+
+    legend: {
+        layout: 'horizontal',
+        align: 'center',
+        verticalAlign: 'bottom',
+        x: 0,
+        y: 0
+    },
+
+    series: [{
+        name: '2009',
+        color: '#B3BEDF',
+        lineWidth: 3,
+        data: [3276,3722,4801,3810,3648,3363,3208,2416,823,3176,1270,1789]
+    }, {
+        name: '2010',
+        color: '#7991CE',
+        lineWidth: 3,
+        data: [3053,3474,4289,3524,3797,3910,3438,1929,3004,2317,2383,1850]
+    }, {
+        name: '2011',
+        color: '#3F6AB7',
+        lineWidth: 3,
+        data: [3749,4156,4945,4629,4994,5688,5117,5612,6271,6156,6181,5112]
+    }, {
+        name: '2012',
+        color: '#335899',
+        lineWidth: 3,
+        data: [5952,6216,7362,6651,6999,7443]
+    }]
+});
+
+var chart2 = Highcharts.chart('Graf2', {
+    chart: {
+        type: 'column',
+        events: {
+          load: function() {
+            var label = this.renderer.label("* El año 2012 refiere únicamente al primer semestre.")
+              .css({
+                width: '400px',
+                fontSize: '12px'
+              })
+              .add();
+
+            label.align(Highcharts.extend(label.getBBox(), {
+              align: 'left',
+              x: 55, // offset
+              verticalAlign: 'bottom',
+              y: 5 // offset
+            }), null, 'spacingBox');
+
+          }
+        }
+    },
+
+    legend: {
+        enabled: false
+    },
+
+    title: {
+        text: 'Evolución de migrantes españoles por año'
+    },
+
+    subtitle: {
+        text: 'Total'
+    },
+
+    yAxis: {
+        title: {
+            text: 'Emigrantes'
+        }
+    },
+
+    xAxis: {
+        categories: ['2009','2010','2011','2012*'],
+        title: {
+            text: "Año"
+        }
+    },
+
+    plotOptions: {
+        column: {
+            colorByPoint: true
+        },
+        series: {
+            dataLabels: {
+                enabled: true,
+                align: 'center',
+                color: '#FFFFFF',
+                y: 30
+            },
+            pointPadding: 0.1,
+            groupPadding: 0
+        }
+    },
+
+    colors: ['#B3BEDF','#7991CE','#3F6AB7','#335899'],
+
+    series: [{
+        name: 'Total',
+        data: [35302,36968,62610,40623]
+    }]
+});
+
+</script>
+
+</body>
+</html>
+
